@@ -1,13 +1,21 @@
-import { shallowMount } from '@vue/test-utils';
+import { shallowMount, mount, createLocalVue } from '@vue/test-utils';
+import ElementUI from 'element-ui';
 import VUserSearchForm from '@/components/VUserSearchForm';
+
+const localVue = createLocalVue();
+localVue.use(ElementUI);
 
 describe('VUserSearchForm', () => {
   const build = () => {
-    const wrapper = shallowMount(VUserSearchForm);
+    const options = { localVue };
+    const wrapper = shallowMount(VUserSearchForm, options);
+    const wrapperMounted = mount(VUserSearchForm, options);
     return {
       wrapper,
-      input: () => wrapper.find('input'),
-      button: () => wrapper.find('button')
+      wrapperMounted,
+      input: () => wrapper.find('.search-form__input'),
+      inputMounted: () => wrapperMounted.find('input'),
+      button: () => wrapperMounted.find('button')
     };
   };
 
@@ -26,13 +34,13 @@ describe('VUserSearchForm', () => {
 
   it('calls "submitted" event when submitted form', () => {
     const expectedUser = 'kuroski';
-    const { wrapper, button, input } = build();
-    input().element.value = expectedUser;
+    const { wrapperMounted, button, inputMounted } = build();
+    inputMounted().element.value = expectedUser;
 
-    input().trigger('input');
+    inputMounted().trigger('input');
     button().trigger('click');
     button().trigger('submit');
 
-    expect(wrapper.emitted().submitted[0]).toEqual([expectedUser]);
+    expect(wrapperMounted.emitted().submitted[0]).toEqual([expectedUser]);
   });
 });
