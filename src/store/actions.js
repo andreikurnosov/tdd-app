@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import api from '@/api';
 
 export default {
@@ -7,8 +9,8 @@ export default {
         const user = await api.searchUser(username);
         commit('SET_USER', user);
         res(user);
-      } catch(error) {
-        rej(error)
+      } catch (error) {
+        rej(error);
       }
     });
   }
